@@ -16,5 +16,4 @@ Route::get('/{id}', 'CatalogController@product')->where('id', '([0-9]+)');
 Route::post('/{id}', 'CatalogController@order')->where('id', '([0-9]+)');
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/error', 'CatalogController@index');

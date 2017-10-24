@@ -39,7 +39,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
-        //
+        $this->mapHomeRoutes();
     }
 
     /**
@@ -54,6 +54,21 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('web')
              ->namespace($this->namespace)
              ->group(base_path('routes/web.php'));
+    }
+
+    /**
+     * Define the "home" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapHomeRoutes()
+    {
+        Route::prefix('home')
+             ->middleware('web', 'auth')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/home.php'));
     }
 
     /**

@@ -11031,10 +11031,12 @@ $("#addProduct").click(function () {
         type: 'POST',
         url: window.location.pathname,
         success: function success(data) {
-            alert(JSON.parse(data)['message']);
-        },
-        error: function error(data) {
-            alert(JSON.parse(data)['message']);
+            data = JSON.parse(data);
+            alert(data.message);
+
+            if (data.reload) {
+                location.reload();
+            }
         }
     });
 });

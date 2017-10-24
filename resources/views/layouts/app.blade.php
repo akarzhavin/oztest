@@ -14,6 +14,14 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
+    <style>
+        .panel-heading .active {
+            border-bottom: 3px solid;
+            color: blue;
+            text-decoration: none;
+            background-color: #eeeeee;
+        }
+    </style>
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
@@ -48,7 +56,7 @@
                         @else
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                    {{ Auth::user()->full_name }} <span class="caret"></span>
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
@@ -71,9 +79,26 @@
             </div>
         </nav>
 
-        @yield('content')
-    </div>
 
+        @if(Auth::check())
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" style="display: grid;">
+                            @include('partials.menu')
+                        </div>
+                        <div class="panel-body">
+                            @yield('panel-body')
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @else
+            @yield('content')
+        @endif
+    </div>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
 </body>

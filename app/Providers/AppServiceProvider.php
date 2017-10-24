@@ -31,5 +31,6 @@ class AppServiceProvider extends ServiceProvider
             \App\PathManager\PathManager::class
         );
 
+        $this->app->singleton('alert', \App\Alert::class);
     }
 }

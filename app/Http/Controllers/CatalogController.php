@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\Alert;
 use App\Order;
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 
 class CatalogController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index(Request $request)
     {
         $query = new Product();
@@ -31,32 +37,72 @@ class CatalogController extends Controller
         return view('welcome', $data);
     }
 
+    /**
+     * @param int $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|void
+     */
     public function product(int $id)
     {
-        $data['product'] = Product::find($id);
+        $product = Product::find($id);
+
+        //Check if product is trashed
+        if(!$product && $product = Product::withTrashed()->find($id)) {
+            $data['contacts'] = $product->owner;
+        } elseif(empty($product)) {
+            return abort(404, 'Not found!');
+        }
+
+        $data['product'] = $product;
+
+        //If user can buy this product
         $data['disabled'] = !Auth::check() ||
                 Auth::user()->products()->where('id', $id)->exists();
 
         return view('product', $data);
     }
 
+    /**
+     * @param int $id
+     * @return mixed
+     */
     public function order(int $id)
     {
+        $count = 1;
         $customer = Auth::user();
-        if($customer->products()->where('id', $id)->exists()){
-            $alert = 'Приобритение своих товаров заблокировано!';
-            return json_encode(['message' => $alert]);
+        $product = Product::find($id);
+
+        if($customer->products()->where('id', $id)->exists()){ //Validate
+            Alert::message('Приобритение своих товаров заблокировано!');
+        } else {
+            $status = $product->takeFromStock($count);
+            if ($status) {
+                $order = $this->addToCart($customer->id, $id, $count);
+                Alert::message('Куплено ' . $order->count . ' товар(ов)');
+            } else {
+                Alert::message('Недостаточно товаров на складе!');
+            }
         }
 
-        $order = Order::firstOrNew([
-            'customer_id' => $customer->id,
-            'product_id' => $id,
-        ]);
+        return Alert::toJson();
+    }
 
-        $order->count++;
+
+    /**
+     * @param int $customerId
+     * @param $productId
+     * @param $count
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    private function addToCart(int $customerId, $productId, $count)
+    {
+        //Create new order
+        $order = Order::firstOrNew([
+            'customer_id' => $customerId,
+            'product_id' => $productId,
+        ]);
+        $order->count += $count;
         $order->save();
 
-        $alert = 'Куплено ' . $order->count . ' товар(ов)';
-        return json_encode(['message' => $alert]);
+       return $order;
     }
 }

@@ -18,10 +18,12 @@ $( "#addProduct" ).click(function() {
         type: 'POST',
         url: window.location.pathname,
         success: function(data){
-            alert( JSON.parse(data)['message'] );
-        },
-        error: function(data){
-            alert( JSON.parse(data)['message'] );
+            data = JSON.parse(data);
+            alert( data.message );
+
+            if(data.reload){
+                location.reload();
+            }
         }
     });
 });

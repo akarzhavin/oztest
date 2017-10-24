@@ -1,0 +1,2 @@
+{{ $exception->getStatusCode() }}
+{{ $exception->getMessage() }}

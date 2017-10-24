@@ -32,13 +32,18 @@ class User extends Authenticatable
         return $this->hasMany('App\Product');
     }
 
-    public function purchases()
+    public function sales() //Продажи
     {
         return $this->hasManyThrough('App\Order', 'App\Product', 'user_id', 'product_id');
     }
 
-    public function sales()
+    public function purchases() //Покупки
     {
         return $this->hasMany('App\Order', 'customer_id', 'id');
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
     }
 }
