@@ -20,12 +20,12 @@ class Image extends Model
      */
     protected $table = 'images';
     private $placeholder = 'placeholder.png';
-    private $dir = 'public'; //default dir
+    private $dir = ''; //default dir
 
     protected $fillable = [
         'name',
         'hash_name',
-        'path',
+        'dir',
         'title',
         'alt',
     ];

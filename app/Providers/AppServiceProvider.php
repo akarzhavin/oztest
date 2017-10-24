@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('ImagesModel', \App\Image::class);
+        $this->app->bind('ImageModel', \App\Image::class);
 
         $this->app->bind(
             \App\PathManager\PathManagerInterface::class,

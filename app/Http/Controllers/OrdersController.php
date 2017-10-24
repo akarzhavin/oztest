@@ -15,7 +15,7 @@ class OrdersController extends Controller
         $purchases = Auth::user()->purchases()->orderBy('updated_at', 'desc')->with('customer', 'product')->get();
         $data['orders'] = $purchases;
         $data['active'] = 'purchases';
-        return view('purchases', $data);
+        return view('admin.purchases', $data);
     }
 
     /**
@@ -26,6 +26,6 @@ class OrdersController extends Controller
         $sales = Auth::user()->sales()->orderBy('updated_at', 'desc')->with('customer', 'product.owner')->get();
         $data['orders'] = $sales;
         $data['active'] = 'sales';
-        return view('sales', $data);
+        return view('admin.sales', $data);
     }
 }

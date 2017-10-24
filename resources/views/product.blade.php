@@ -5,7 +5,7 @@
 </div>
 <div class="row">
     <div class="col-sm-4">
-        <img src="{{ $product->image->original() }}" alt=""><br>
+        <img src="{{ $product->image->original() }}" width="300" height="300" alt=""><br>
     </div>
     <div class="col-sm-8 text">
         <p>{{ $product->description }}</p>

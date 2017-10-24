@@ -21,7 +21,7 @@ class CatalogController extends Controller
         $query = new Product();
         switch($request->sort) {
             case 'now':
-                $query = $query->orderBy('created_at', 'desc');
+                $query = $query->orderBy('updated_at', 'desc');
                 break;
             case 'price':
                 $query = $query->orderBy('price', 'desc');
